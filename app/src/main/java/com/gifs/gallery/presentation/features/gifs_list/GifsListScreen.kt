@@ -42,7 +42,7 @@ fun GifsListScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(3),
+            columns = StaggeredGridCells.Fixed(4),
             verticalItemSpacing = 12.dp,
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             contentPadding = PaddingValues(vertical = 8.dp),
