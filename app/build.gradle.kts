@@ -3,8 +3,10 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
@@ -43,9 +45,6 @@ android {
     buildFeatures {
         compose = true
     }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -73,10 +72,15 @@ dependencies {
 
     // Hilt for di
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigationCompose)
 
     // Retrofit for api calls
     implementation(libs.retrofit)
     implementation(libs.retrofit.converterGson)
+
+    // Room for local data base
+    implementation(libs.room)
+    ksp(libs.room.compiler)
+    implementation(libs.room.paging)
 }
