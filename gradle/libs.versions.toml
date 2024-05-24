@@ -44,7 +44,6 @@ retrofit-converterGson = { group = "com.squareup.retrofit2", name = "converter-g
 #room
 room = { group = "androidx.room", name = "room-ktx", version.ref = "room"}
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room"}
-room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room"}
 
 #coil
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
@@ -56,7 +55,6 @@ kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
-org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 
 #hilt

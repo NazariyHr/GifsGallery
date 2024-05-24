@@ -83,7 +83,6 @@ dependencies {
     // Room for local data base
     implementation(libs.room)
     ksp(libs.room.compiler)
-    implementation(libs.room.paging)
 
     // Coil for gif loading and showing
     implementation(libs.coil)

@@ -8,3 +8,7 @@ data class Pagination(
     val count: Int,
     val offset: Int
 )
+
+fun Pagination.isEnd(): Boolean {
+    return totalCount == offset + count
+}
