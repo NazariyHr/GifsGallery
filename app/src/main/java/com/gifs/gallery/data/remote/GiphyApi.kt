@@ -11,8 +11,8 @@ interface GiphyApi {
         /**
          * This api key has a quota, no more 100 requests per hour to the api
          */
-        //const val API_KEY = "v3nKlncYQHubdI6iwvReVSL65zuEiP5j" // first api key
-        const val API_KEY = "XkkQ8k7AgIr1ioKJnpFqXtgqo6wLI2zf"
+        const val API_KEY = "v3nKlncYQHubdI6iwvReVSL65zuEiP5j"
+
         const val BASE_LIMIT = 50
     }
 

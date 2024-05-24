@@ -11,7 +11,7 @@ interface GifDao {
     suspend fun upsertAll(gifs: List<GifEntity>)
 
     @Query("select * from gifentity limit :limit offset :offset")
-    suspend fun getGifs(limit: Int = 50, offset: Int): List<GifEntity>
+    suspend fun getGifs(limit: Int, offset: Int): List<GifEntity>
 
     @Query("delete from gifentity where id = :id")
     suspend fun deleteGif(id: String)

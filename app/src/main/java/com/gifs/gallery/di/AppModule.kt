@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.gifs.gallery.data.local.GifsDatabase
 import com.gifs.gallery.data.remote.GiphyApi
 import com.gifs.gallery.domain.use_case.GetGifsUseCase
+import com.gifs.gallery.domain.use_case.RemoveGifUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,5 +48,10 @@ class AppModule {
         gifsDatabase: GifsDatabase
     ): GetGifsUseCase {
         return GetGifsUseCase(giphyApi, gifsDatabase)
+    }
+
+    @Provides
+    fun provideRemoveGifUseCase(gifsDatabase: GifsDatabase): RemoveGifUseCase {
+        return RemoveGifUseCase(gifsDatabase)
     }
 }

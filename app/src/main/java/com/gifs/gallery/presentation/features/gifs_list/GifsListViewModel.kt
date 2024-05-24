@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.gifs.gallery.domain.errors.GifsLoadingError
 import com.gifs.gallery.domain.use_case.GetGifsUseCase
+import com.gifs.gallery.domain.use_case.RemoveGifUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class GifsListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
-    val getGifsUseCase: GetGifsUseCase
+    private val getGifsUseCase: GetGifsUseCase,
+    private val removeGifUseCase: RemoveGifUseCase
 ) : ViewModel() {
 
     companion object {
@@ -59,6 +61,16 @@ class GifsListViewModel @Inject constructor(
     fun onScrolledToTheEnd() {
         if (!_state.value.endOfListReached && !_state.value.isLoading) {
             loadMore()
+        }
+    }
+
+    fun onRemoveGifClicked(gifId: String) {
+        viewModelScope.launch {
+            val newList = stateValue.gifs.filter { it.id != gifId }
+            stateValue = stateValue.copy(
+                gifs = newList
+            )
+            removeGifUseCase(gifId)
         }
     }
 
