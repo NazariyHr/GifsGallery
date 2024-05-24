@@ -74,4 +74,9 @@ dependencies {
     // Hilt for di
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigationCompose)
+
+    // Retrofit for api calls
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.converterGson)
 }
