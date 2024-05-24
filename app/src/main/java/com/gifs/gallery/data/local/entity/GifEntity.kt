@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey
 data class GifEntity(
     @PrimaryKey
     val id: String,
+    val ratio: Float,
     val url: String,
     val downsizedUrl: String
 )

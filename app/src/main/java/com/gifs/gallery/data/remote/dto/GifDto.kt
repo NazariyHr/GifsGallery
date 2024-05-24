@@ -10,6 +10,7 @@ data class GifDto(
 
 data class GifInfo(
     val original: Original,
+    @SerializedName("preview_gif")
     val downsized: Downsized
 )
 
@@ -18,5 +19,7 @@ data class Original(
 )
 
 data class Downsized(
-    val url: String
+    val url: String,
+    val width: Int,
+    val height: Int
 )

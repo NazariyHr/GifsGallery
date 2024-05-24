@@ -69,6 +69,7 @@ dependencies {
     androidTestImplementation(libs.ui.test.junit4)
     debugImplementation(libs.ui.tooling)
     debugImplementation(libs.ui.test.manifest)
+    implementation(libs.lifecycle.compose)
 
     // Hilt for di
     implementation(libs.hilt.android)
@@ -83,4 +84,8 @@ dependencies {
     implementation(libs.room)
     ksp(libs.room.compiler)
     implementation(libs.room.paging)
+
+    // Coil for gif loading and showing
+    implementation(libs.coil)
+    implementation(libs.coil.gif)
 }

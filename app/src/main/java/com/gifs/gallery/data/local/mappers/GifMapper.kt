@@ -7,6 +7,7 @@ fun GifEntity.toGif(): Gif {
     return Gif(
         id = id,
         url = url,
-        downsizedUrl = downsizedUrl
+        downsizedUrl = downsizedUrl,
+        ratio = ratio
     )
 }

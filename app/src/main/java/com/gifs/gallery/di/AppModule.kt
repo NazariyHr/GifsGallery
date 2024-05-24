@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.gifs.gallery.data.local.GifsDatabase
 import com.gifs.gallery.data.remote.GiphyApi
+import com.gifs.gallery.domain.use_case.GetTrendingGifsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,5 +39,13 @@ class AppModule {
             GifsDatabase::class.java,
             "gifs.db"
         ).build()
+    }
+
+    @Provides
+    fun provideGetTrendingGifsUseCase(
+        giphyApi: GiphyApi,
+        gifsDatabase: GifsDatabase
+    ): GetTrendingGifsUseCase {
+        return GetTrendingGifsUseCase(giphyApi, gifsDatabase)
     }
 }

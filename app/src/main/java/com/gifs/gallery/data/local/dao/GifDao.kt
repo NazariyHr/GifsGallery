@@ -12,6 +12,9 @@ interface GifDao {
     suspend fun upsertAll(gifs: List<GifEntity>)
 
     @Query("select * from gifentity")
+    suspend fun allGifs(): List<GifEntity>
+
+    @Query("select * from gifentity")
     fun allGifsPagingSource(): PagingSource<Int, GifEntity>
 
     @Query("delete from gifentity where id = :id")
