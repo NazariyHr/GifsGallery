@@ -1,4 +1,4 @@
-package com.gifs.gallery.ui.theme
+package com.gifs.gallery.presentation.common.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
