@@ -34,10 +34,14 @@ import kotlinx.coroutines.Dispatchers
 fun GifItem(
     gif: Gif,
     onRemoveGifClicked: (gifId: String) -> Unit,
+    onGifClicked: (gif: Gif) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier,
+        modifier = modifier
+            .clickable {
+                onGifClicked(gif)
+            },
         contentAlignment = Alignment.TopEnd
     ) {
         var imageLoaded by rememberSaveable { mutableStateOf(false) }
@@ -94,11 +98,12 @@ fun GifItem(
 fun GifItemPreview() {
     GifItem(
         gif = Gif(
-            id = "",
+            id = "id",
             ratio = 1.7f,
             url = "",
             downsizedUrl = ""
         ),
-        onRemoveGifClicked = {}
+        onRemoveGifClicked = {},
+        onGifClicked = {}
     )
 }

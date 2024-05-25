@@ -17,7 +17,7 @@ interface GiphyApi {
     }
 
     /**
-     * limit - maximum amount of elements loading in call
+     * limit - maximum amount of elements loading per a call
      * offset - amount of elements to skip
      */
 

@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -88,4 +89,8 @@ dependencies {
     // Coil for gif loading and showing
     implementation(libs.coil)
     implementation(libs.coil.gif)
+
+    // Compose navigation between screens
+    implementation(libs.navigation.compose)
+    implementation(libs.serialization.json)
 }

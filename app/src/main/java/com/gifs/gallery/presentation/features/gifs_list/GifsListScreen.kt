@@ -22,15 +22,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavController
+import com.gifs.gallery.domain.model.Gif
 import com.gifs.gallery.presentation.features.gifs_list.components.GifItem
 import com.gifs.gallery.presentation.features.gifs_list.components.Search
+import com.gifs.gallery.presentation.features.navigation.toGifScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -38,13 +41,17 @@ import kotlinx.coroutines.withContext
 
 @Composable
 fun GifsListScreenRoot(
+    navController: NavController,
     viewModel: GifsListViewModel = hiltViewModel(),
 ) {
     val gifs by viewModel.state.collectAsStateWithLifecycle()
     GifsListScreen(
-        gifs,
-        viewModel.errors,
-        viewModel::onAction
+        state = gifs,
+        errorsFlow = viewModel.errors,
+        onAction = viewModel::onAction,
+        onGifClicked = { gif ->
+            navController.navigate(gif.toGifScreen())
+        }
     )
 }
 
@@ -52,7 +59,8 @@ fun GifsListScreenRoot(
 fun GifsListScreen(
     state: GifsListState,
     errorsFlow: Flow<String>,
-    onAction: (GifsListScreenAction) -> Unit
+    onAction: (GifsListScreenAction) -> Unit,
+    onGifClicked: (gif: Gif) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -107,9 +115,13 @@ fun GifsListScreen(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 content = {
                     items(state.gifs, key = { it.id }) { gif ->
-                        GifItem(gif = gif, onRemoveGifClicked = {
-                            onAction(GifsListScreenAction.OnRemoveGifClicked(it))
-                        })
+                        GifItem(
+                            gif = gif,
+                            onRemoveGifClicked = {
+                                onAction(GifsListScreenAction.OnRemoveGifClicked(it))
+                            },
+                            onGifClicked = onGifClicked
+                        )
                     }
                     item {
                         if (state.isLoading) {
@@ -133,5 +145,5 @@ fun GifsListScreen(
 @Preview(showBackground = true)
 @Composable
 fun GifsListScreenPreview() {
-    GifsListScreen(GifsListState(), emptyFlow(), {})
+    GifsListScreen(GifsListState(), emptyFlow(), {}, {})
 }

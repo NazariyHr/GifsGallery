@@ -106,7 +106,7 @@ fun Search(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Search,
-                        contentDescription = "Search Icon"
+                        contentDescription = "Search icon"
                     )
                 }
             },
@@ -115,7 +115,7 @@ fun Search(
                     IconButton(
                         modifier = Modifier
                             .semantics {
-                                contentDescription = "CloseButton"
+                                contentDescription = "Close button"
                             },
                         onClick = {
                             if (text.isNotEmpty()) {
@@ -127,7 +127,7 @@ fun Search(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close Icon"
+                            contentDescription = "Close icon"
                         )
                     }
                 }
