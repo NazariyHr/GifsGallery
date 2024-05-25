@@ -21,6 +21,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.request.CachePolicy
@@ -30,6 +32,7 @@ import com.gifs.gallery.domain.model.Gif
 import com.gifs.gallery.presentation.common.theme.ScarletRed
 import kotlinx.coroutines.Dispatchers
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun GifItem(
     gif: Gif,
@@ -37,6 +40,7 @@ fun GifItem(
     onGifClicked: (gif: Gif) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Box(
         modifier = modifier
             .clickable {
@@ -57,7 +61,7 @@ fun GifItem(
             }
         }
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
+            model = ImageRequest.Builder(context)
                 .decoderFactory(GifDecoder.Factory())
                 .dispatcher(Dispatchers.IO)
                 .listener(listener)
@@ -77,6 +81,7 @@ fun GifItem(
             Box(
                 modifier = Modifier.clickable {
                     onRemoveGifClicked(gif.id)
+                    ImageLoader(context).diskCache?.remove(gif.downsizedUrl)
                 }
             ) {
                 Icon(
