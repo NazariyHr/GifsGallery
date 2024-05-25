@@ -35,7 +35,7 @@ import com.gifs.gallery.presentation.features.gifs.GifsState
 import com.gifs.gallery.presentation.features.gifs.GifsViewModel
 import com.gifs.gallery.presentation.features.gifs.gifs_list.components.GifItem
 import com.gifs.gallery.presentation.features.gifs.gifs_list.components.Search
-import com.gifs.gallery.presentation.features.navigation.toGifScreen
+import com.gifs.gallery.presentation.navigation.toGifScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow

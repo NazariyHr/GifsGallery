@@ -1,4 +1,4 @@
-package com.gifs.gallery.presentation.features.navigation
+package com.gifs.gallery.presentation.navigation
 
 import android.os.Parcelable
 import com.gifs.gallery.domain.model.Gif
@@ -12,27 +12,12 @@ sealed class Screen {
     @Serializable
     @Parcelize
     data class GifScreen(
-        val id: String,
-        val ratio: Float,
-        val url: String,
-        val downsizedUrl: String
+        val id: String
     ) : Parcelable
-}
-
-fun Screen.GifScreen.toGif(): Gif {
-    return Gif(
-        id,
-        ratio,
-        url,
-        downsizedUrl
-    )
 }
 
 fun Gif.toGifScreen(): Screen.GifScreen {
     return Screen.GifScreen(
-        id,
-        ratio,
-        url,
-        downsizedUrl
+        id
     )
 }

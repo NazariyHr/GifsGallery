@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.gifs.gallery.presentation.common.theme.GifsGalleryTheme
-import com.gifs.gallery.presentation.features.navigation.AppNavigation
+import com.gifs.gallery.presentation.navigation.AppNavigation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
