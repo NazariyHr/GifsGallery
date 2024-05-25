@@ -31,7 +31,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.gifs.gallery.domain.model.Gif
 import com.gifs.gallery.presentation.features.gifs.GifsAction
-import com.gifs.gallery.presentation.features.gifs.GifsListState
+import com.gifs.gallery.presentation.features.gifs.GifsState
 import com.gifs.gallery.presentation.features.gifs.GifsViewModel
 import com.gifs.gallery.presentation.features.gifs.gifs_list.components.GifItem
 import com.gifs.gallery.presentation.features.gifs.gifs_list.components.Search
@@ -59,7 +59,7 @@ fun GifsListScreenRoot(
 
 @Composable
 fun GifsListScreen(
-    state: GifsListState,
+    state: GifsState,
     errorsFlow: Flow<String>,
     onAction: (GifsAction) -> Unit,
     onGifClicked: (gif: Gif) -> Unit
@@ -75,7 +75,6 @@ fun GifsListScreen(
             }
         }
     }
-    val count = state.gifs.count()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -93,7 +92,7 @@ fun GifsListScreen(
                 }
             }
         }
-        if (isScrolledToTheEnd && !state.isLoading) {
+        if (isScrolledToTheEnd) {
             LaunchedEffect(Unit) {
                 onAction(GifsAction.OnScrolledToEnd)
             }
@@ -148,5 +147,5 @@ fun GifsListScreen(
 @Preview(showBackground = true)
 @Composable
 fun GifsListScreenPreview() {
-    GifsListScreen(GifsListState(), emptyFlow(), {}, {})
+    GifsListScreen(GifsState(), emptyFlow(), {}, {})
 }

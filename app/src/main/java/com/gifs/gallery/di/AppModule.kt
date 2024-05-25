@@ -1,10 +1,12 @@
 package com.gifs.gallery.di
 
 import android.content.Context
+import android.net.ConnectivityManager
 import androidx.room.Room
 import com.gifs.gallery.data.local.GifsDatabase
 import com.gifs.gallery.data.remote.GiphyApi
 import com.gifs.gallery.domain.use_case.GetGifsUseCase
+import com.gifs.gallery.domain.use_case.GetNetworkConnectivityUseCase
 import com.gifs.gallery.domain.use_case.RemoveGifUseCase
 import com.gifs.gallery.domain.use_case.SearchGifsUseCase
 import dagger.Module
@@ -62,5 +64,14 @@ class AppModule {
         gifsDatabase: GifsDatabase
     ): SearchGifsUseCase {
         return SearchGifsUseCase(giphyApi, gifsDatabase)
+    }
+
+    @Provides
+    fun provideGetNetworkConnectivityUseCase(
+        @ApplicationContext context: Context
+    ): GetNetworkConnectivityUseCase {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return GetNetworkConnectivityUseCase(connectivityManager)
     }
 }
