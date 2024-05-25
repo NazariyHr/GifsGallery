@@ -30,6 +30,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import com.gifs.gallery.presentation.features.gifs_list.components.GifItem
+import com.gifs.gallery.presentation.features.gifs_list.components.Search
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -43,8 +44,7 @@ fun GifsListScreenRoot(
     GifsListScreen(
         gifs,
         viewModel.errors,
-        viewModel::onScrolledToTheEnd,
-        viewModel::onRemoveGifClicked
+        viewModel::onAction
     )
 }
 
@@ -52,8 +52,7 @@ fun GifsListScreenRoot(
 fun GifsListScreen(
     state: GifsListState,
     errorsFlow: Flow<String>,
-    onScrolledToTheEnd: () -> Unit,
-    onRemoveGifClicked: (gifId: String) -> Unit
+    onAction: (GifsListScreenAction) -> Unit
 ) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -85,12 +84,20 @@ fun GifsListScreen(
         }
         if (isScrolledToTheEnd && !state.isLoading) {
             LaunchedEffect(Unit) {
-                onScrolledToTheEnd()
+                onAction(GifsListScreenAction.OnScrolledToEnd)
             }
         }
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
+            Search(
+                onSearchClicked = {
+                    onAction(GifsListScreenAction.OnSearch(it))
+                },
+                onCloseClicked = {
+                    onAction(GifsListScreenAction.OnCloseSearchClicked)
+                }
+            )
             LazyVerticalStaggeredGrid(
                 modifier = Modifier.weight(1f),
                 columns = StaggeredGridCells.Fixed(4),
@@ -100,7 +107,9 @@ fun GifsListScreen(
                 contentPadding = PaddingValues(vertical = 8.dp),
                 content = {
                     items(state.gifs, key = { it.id }) { gif ->
-                        GifItem(gif = gif, onRemoveGifClicked = onRemoveGifClicked)
+                        GifItem(gif = gif, onRemoveGifClicked = {
+                            onAction(GifsListScreenAction.OnRemoveGifClicked(it))
+                        })
                     }
                     item {
                         if (state.isLoading) {
@@ -124,5 +133,5 @@ fun GifsListScreen(
 @Preview(showBackground = true)
 @Composable
 fun GifsListScreenPreview() {
-    GifsListScreen(GifsListState(), emptyFlow(), {}, {})
+    GifsListScreen(GifsListState(), emptyFlow(), {})
 }

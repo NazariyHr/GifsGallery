@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.gifs.gallery.domain.errors.GifsLoadingError
 import com.gifs.gallery.domain.use_case.GetGifsUseCase
 import com.gifs.gallery.domain.use_case.RemoveGifUseCase
+import com.gifs.gallery.domain.use_case.SearchGifsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +19,8 @@ import javax.inject.Inject
 class GifsListViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getGifsUseCase: GetGifsUseCase,
-    private val removeGifUseCase: RemoveGifUseCase
+    private val removeGifUseCase: RemoveGifUseCase,
+    private val searchGifsUseCase: SearchGifsUseCase
 ) : ViewModel() {
 
     companion object {
@@ -44,7 +46,10 @@ class GifsListViewModel @Inject constructor(
             if (_state.value.gifs.isEmpty()) {
                 stateValue = stateValue.copy(isLoading = true)
                 stateValue = try {
-                    val loadedGifs = getGifsUseCase(lastNumber = 0)
+                    val loadedGifs = getGifsUseCase(
+                        lastNumber = 0,
+                        idsNotToLoad = alreadyShowedGifsId()
+                    )
                     stateValue.copy(
                         gifs = loadedGifs,
                         endOfListReached = loadedGifs.isEmpty(),
@@ -58,19 +63,76 @@ class GifsListViewModel @Inject constructor(
         }
     }
 
-    fun onScrolledToTheEnd() {
-        if (!_state.value.endOfListReached && !_state.value.isLoading) {
-            loadMore()
-        }
-    }
+    fun onAction(action: GifsListScreenAction) {
+        when (action) {
+            GifsListScreenAction.OnScrolledToEnd -> {
+                if (!_state.value.endOfListReached && !_state.value.isLoading) {
+                    loadMore()
+                }
+            }
 
-    fun onRemoveGifClicked(gifId: String) {
-        viewModelScope.launch {
-            val newList = stateValue.gifs.filter { it.id != gifId }
-            stateValue = stateValue.copy(
-                gifs = newList
-            )
-            removeGifUseCase(gifId)
+            is GifsListScreenAction.OnRemoveGifClicked -> {
+                viewModelScope.launch {
+                    val newList = stateValue.gifs.filter { it.id != action.gifId }
+                    stateValue = stateValue.copy(
+                        gifs = newList
+                    )
+                    removeGifUseCase(action.gifId)
+                }
+            }
+
+            is GifsListScreenAction.OnSearch -> {
+                stateValue = stateValue.copy(
+                    isLoading = true,
+                    gifs = emptyList(),
+                    displayingItems = DisplayingItems.SEARCH,
+                    searchQuery = action.searchQuery
+                )
+                viewModelScope.launch {
+                    stateValue = try {
+                        val loadedGifs =
+                            searchGifsUseCase(
+                                queryString = action.searchQuery,
+                                lastNumber = 0,
+                                idsNotToLoad = alreadyShowedGifsId()
+                            )
+                        stateValue.copy(
+                            gifs = loadedGifs,
+                            endOfListReached = loadedGifs.isEmpty(),
+                            isLoading = false
+                        )
+                    } catch (e: GifsLoadingError) {
+                        _errors.send(e.message ?: "Error occurred during loading")
+                        stateValue.copy(isLoading = false)
+                    }
+                }
+            }
+
+            GifsListScreenAction.OnCloseSearchClicked -> {
+                stateValue = stateValue.copy(
+                    isLoading = true,
+                    gifs = emptyList(),
+                    displayingItems = DisplayingItems.ALL,
+                    searchQuery = ""
+                )
+                viewModelScope.launch {
+                    stateValue = try {
+                        val loadedGifs =
+                            getGifsUseCase(
+                                lastNumber = 0,
+                                idsNotToLoad = alreadyShowedGifsId()
+                            )
+                        stateValue.copy(
+                            gifs = loadedGifs,
+                            endOfListReached = loadedGifs.isEmpty(),
+                            isLoading = false
+                        )
+                    } catch (e: GifsLoadingError) {
+                        _errors.send(e.message ?: "Error occurred during loading")
+                        stateValue.copy(isLoading = false)
+                    }
+                }
+            }
         }
     }
 
@@ -79,7 +141,15 @@ class GifsListViewModel @Inject constructor(
             try {
                 stateValue = stateValue.copy(isLoading = true)
                 val gifsCount = _state.value.gifs.count()
-                val loadedGifs = getGifsUseCase(lastNumber = gifsCount)
+                val loadedGifs = if (_state.value.displayingItems == DisplayingItems.SEARCH) {
+                    searchGifsUseCase(
+                        _state.value.searchQuery,
+                        lastNumber = gifsCount,
+                        idsNotToLoad = alreadyShowedGifsId()
+                    )
+                } else {
+                    getGifsUseCase(lastNumber = gifsCount, idsNotToLoad = alreadyShowedGifsId())
+                }
                 stateValue = stateValue.copy(
                     gifs = stateValue.gifs + loadedGifs,
                     endOfListReached = loadedGifs.isEmpty(),
@@ -87,8 +157,15 @@ class GifsListViewModel @Inject constructor(
                 )
             } catch (e: GifsLoadingError) {
                 _errors.send(e.message ?: "Error occurred during loading")
-                stateValue = stateValue.copy(isLoading = false)
+                stateValue = stateValue.copy(
+                    isLoading = false,
+                    endOfListReached = true
+                )
             }
         }
+    }
+
+    private fun alreadyShowedGifsId(): List<String> {
+        return _state.value.gifs.map { it.id }
     }
 }

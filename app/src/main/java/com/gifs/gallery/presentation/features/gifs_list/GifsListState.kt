@@ -8,5 +8,11 @@ import kotlinx.parcelize.Parcelize
 data class GifsListState(
     val gifs: List<Gif> = emptyList(),
     val isLoading: Boolean = false,
-    val endOfListReached: Boolean = false
+    val endOfListReached: Boolean = false,
+    val displayingItems: DisplayingItems = DisplayingItems.ALL,
+    val searchQuery: String = ""
 ) : Parcelable
+
+enum class DisplayingItems {
+    ALL, SEARCH
+}

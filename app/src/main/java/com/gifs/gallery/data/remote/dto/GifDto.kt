@@ -11,15 +11,19 @@ data class GifDto(
 data class GifInfo(
     val original: Original,
     @SerializedName("preview_gif")
-    val downsized: Downsized
+    val preview: Preview
 )
 
 data class Original(
     val url: String
 )
 
-data class Downsized(
-    val url: String,
-    val width: Int,
-    val height: Int
+data class Preview(
+    val url: String?,
+    val width: Int?,
+    val height: Int?
 )
+
+fun Preview.isEmpty(): Boolean {
+    return url == null || width == null || height == null
+}

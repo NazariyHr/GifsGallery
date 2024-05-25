@@ -6,6 +6,7 @@ import com.gifs.gallery.data.local.GifsDatabase
 import com.gifs.gallery.data.remote.GiphyApi
 import com.gifs.gallery.domain.use_case.GetGifsUseCase
 import com.gifs.gallery.domain.use_case.RemoveGifUseCase
+import com.gifs.gallery.domain.use_case.SearchGifsUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,5 +54,13 @@ class AppModule {
     @Provides
     fun provideRemoveGifUseCase(gifsDatabase: GifsDatabase): RemoveGifUseCase {
         return RemoveGifUseCase(gifsDatabase)
+    }
+
+    @Provides
+    fun provideSearchGifsUseCase(
+        giphyApi: GiphyApi,
+        gifsDatabase: GifsDatabase
+    ): SearchGifsUseCase {
+        return SearchGifsUseCase(giphyApi, gifsDatabase)
     }
 }
