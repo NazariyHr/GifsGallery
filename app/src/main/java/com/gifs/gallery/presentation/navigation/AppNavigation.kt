@@ -1,4 +1,4 @@
-package com.gifs.gallery.presentation.features.navigation
+package com.gifs.gallery.presentation.navigation
 
 import android.os.Build
 import android.os.Bundle
@@ -32,9 +32,9 @@ fun AppNavigation() {
                 typeOf<Screen.GifScreen>() to parcelableType<Screen.GifScreen>()
             )
         ) {
-            val gif = it.toRoute<Screen.GifScreen>().toGif()
+            val gifId = it.toRoute<Screen.GifScreen>().id
             val vm = sharedViewModel<GifsViewModel>()
-            GifScreenRoot(navController, vm, gif)
+            GifScreenRoot(navController, vm, gifId)
         }
     }
 }

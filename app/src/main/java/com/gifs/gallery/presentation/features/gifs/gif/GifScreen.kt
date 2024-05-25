@@ -34,7 +34,6 @@ import coil.decode.GifDecoder
 import coil.request.CachePolicy
 import coil.request.ErrorResult
 import coil.request.ImageRequest
-import com.gifs.gallery.domain.model.Gif
 import com.gifs.gallery.presentation.common.connectionToNetworkState
 import com.gifs.gallery.presentation.features.gifs.GifsAction
 import com.gifs.gallery.presentation.features.gifs.GifsState
@@ -45,12 +44,12 @@ import kotlinx.coroutines.Dispatchers
 fun GifScreenRoot(
     navController: NavController,
     viewModel: GifsViewModel,
-    gif: Gif
+    gifId: String
 ) {
     val gifs by viewModel.state.collectAsStateWithLifecycle()
     GifScreen(
         state = gifs,
-        gif = gif,
+        gifId = gifId,
         onAction = viewModel::onAction,
         onBackPressed = {
             navController.navigateUp()
@@ -61,7 +60,7 @@ fun GifScreenRoot(
 @Composable
 fun GifScreen(
     state: GifsState,
-    gif: Gif,
+    gifId: String,
     onAction: (GifsAction) -> Unit,
     onBackPressed: () -> Unit
 ) {
@@ -75,7 +74,7 @@ fun GifScreen(
                 pageCount = {
                     state.gifs.count()
                 },
-                initialPage = state.gifs.indexOfFirst { it.id == gif.id }
+                initialPage = state.gifs.indexOfFirst { it.id == gifId }
             )
 
             LaunchedEffect(pagerState, state.gifs) {
@@ -171,5 +170,5 @@ fun GifScreen(
 @Preview
 @Composable
 fun GifScreenPreview() {
-    GifScreen(GifsState(), Gif("", 1f, "", ""), {}, {})
+    GifScreen(GifsState(), "", {}, {})
 }
