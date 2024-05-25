@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.wear.compose.material.ContentAlpha
 import com.gifs.gallery.presentation.common.components.keyboardIsOpened
@@ -146,4 +147,10 @@ fun Search(
             )
         )
     }
+}
+
+@Preview
+@Composable
+fun SearchPreview() {
+    Search(onSearchClicked = {}, onCloseClicked = {})
 }

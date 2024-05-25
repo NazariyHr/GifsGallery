@@ -47,7 +47,6 @@ class GifsListViewModel @Inject constructor(
                 stateValue = stateValue.copy(isLoading = true)
                 stateValue = try {
                     val loadedGifs = getGifsUseCase(
-                        lastNumber = 0,
                         idsNotToLoad = alreadyShowedGifsId()
                     )
                     stateValue.copy(
@@ -93,7 +92,6 @@ class GifsListViewModel @Inject constructor(
                         val loadedGifs =
                             searchGifsUseCase(
                                 queryString = action.searchQuery,
-                                lastNumber = 0,
                                 idsNotToLoad = alreadyShowedGifsId()
                             )
                         stateValue.copy(
@@ -119,7 +117,6 @@ class GifsListViewModel @Inject constructor(
                     stateValue = try {
                         val loadedGifs =
                             getGifsUseCase(
-                                lastNumber = 0,
                                 idsNotToLoad = alreadyShowedGifsId()
                             )
                         stateValue.copy(
@@ -140,15 +137,13 @@ class GifsListViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 stateValue = stateValue.copy(isLoading = true)
-                val gifsCount = _state.value.gifs.count()
                 val loadedGifs = if (_state.value.displayingItems == DisplayingItems.SEARCH) {
                     searchGifsUseCase(
                         _state.value.searchQuery,
-                        lastNumber = gifsCount,
                         idsNotToLoad = alreadyShowedGifsId()
                     )
                 } else {
-                    getGifsUseCase(lastNumber = gifsCount, idsNotToLoad = alreadyShowedGifsId())
+                    getGifsUseCase(idsNotToLoad = alreadyShowedGifsId())
                 }
                 stateValue = stateValue.copy(
                     gifs = stateValue.gifs + loadedGifs,

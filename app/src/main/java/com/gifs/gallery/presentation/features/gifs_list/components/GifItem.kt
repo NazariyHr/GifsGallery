@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.decode.GifDecoder
@@ -32,8 +33,8 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun GifItem(
     gif: Gif,
-    modifier: Modifier = Modifier,
-    onRemoveGifClicked: (gifId: String) -> Unit
+    onRemoveGifClicked: (gifId: String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier,
@@ -86,4 +87,18 @@ fun GifItem(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun GifItemPreview() {
+    GifItem(
+        gif = Gif(
+            id = "",
+            ratio = 1.7f,
+            url = "",
+            downsizedUrl = ""
+        ),
+        onRemoveGifClicked = {}
+    )
 }

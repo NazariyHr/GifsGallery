@@ -27,9 +27,9 @@ class SearchGifsUseCase @Inject constructor(
     @Throws(GifsLoadingError::class)
     suspend operator fun invoke(
         queryString: String,
-        lastNumber: LastItemNumber,
         idsNotToLoad: List<String>
     ): List<Gif> {
+        val offset = idsNotToLoad.count()
         return withContext(Dispatchers.IO) {
             try {
                 val keywords = queryString.split(" ")
@@ -37,14 +37,14 @@ class SearchGifsUseCase @Inject constructor(
                     gifsDatabase.gifsDao.search(
                         keywords = keywords,
                         limit = PER_PAGE,
-                        offset = lastNumber
+                        offset = offset
                     )
                         .filter { it.id !in idsNotToLoad }
                         .toMutableList()
 
                 if (loadedGifs.isEmpty()) {
                     var newGifsLoaded = false
-                    var lastRemoteOffset = lastNumber
+                    var lastRemoteOffset = offset
 
                     val removedGifsIds = gifsDatabase.removedGifsDao.getAll().map { it.id }
 

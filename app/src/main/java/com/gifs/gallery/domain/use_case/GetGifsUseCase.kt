@@ -14,8 +14,6 @@ import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
 
-typealias LastItemNumber = Int
-
 class GetGifsUseCase @Inject constructor(
     private val giphyApi: GiphyApi,
     private val gifsDatabase: GifsDatabase
@@ -25,20 +23,18 @@ class GetGifsUseCase @Inject constructor(
     }
 
     @Throws(GifsLoadingError::class)
-    suspend operator fun invoke(
-        lastNumber: LastItemNumber,
-        idsNotToLoad: List<String>
-    ): List<Gif> {
+    suspend operator fun invoke(idsNotToLoad: List<String>): List<Gif> {
+        val offset = idsNotToLoad.count()
         return withContext(Dispatchers.IO) {
             try {
                 val loadedGifs =
-                    gifsDatabase.gifsDao.getGifs(limit = PER_PAGE, offset = lastNumber)
+                    gifsDatabase.gifsDao.getGifs(limit = PER_PAGE, offset = offset)
                         .filter { it.id !in idsNotToLoad }
                         .toMutableList()
 
                 if (loadedGifs.isEmpty()) {
                     var newGifsLoaded = false
-                    var lastRemoteOffset = lastNumber
+                    var lastRemoteOffset = offset
 
                     val removedGifsIds = gifsDatabase.removedGifsDao.getAll().map { it.id }
 
@@ -69,7 +65,6 @@ class GetGifsUseCase @Inject constructor(
                         if (endOfListInRemote) break
                     }
                 }
-
                 return@withContext loadedGifs.map { it.toGif() }
             } catch (e: IOException) {
                 throw GifsLoadingError(e.message)
