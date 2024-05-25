@@ -18,16 +18,16 @@ import kotlin.reflect.typeOf
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = GifsListScreen) {
-        composable<GifsListScreen> {
+    NavHost(navController = navController, startDestination = Screen.GifsListScreen) {
+        composable<Screen.GifsListScreen> {
             GifsListScreenRoot(navController)
         }
-        composable<GifScreen>(
+        composable<Screen.GifScreen>(
             typeMap = mapOf(
-                typeOf<GifScreen>() to parcelableType<GifScreen>()
+                typeOf<Screen.GifScreen>() to parcelableType<Screen.GifScreen>()
             )
         ) {
-            val gif = it.toRoute<GifScreen>().toGif()
+            val gif = it.toRoute<Screen.GifScreen>().toGif()
             GifScreen(gif)
         }
     }
