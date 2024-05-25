@@ -34,7 +34,6 @@ import coil.decode.GifDecoder
 import coil.request.CachePolicy
 import coil.request.ErrorResult
 import coil.request.ImageRequest
-import com.gifs.gallery.presentation.common.connectionToNetworkState
 import com.gifs.gallery.presentation.features.gifs.GifsAction
 import com.gifs.gallery.presentation.features.gifs.GifsState
 import com.gifs.gallery.presentation.features.gifs.GifsViewModel
@@ -64,7 +63,6 @@ fun GifScreen(
     onAction: (GifsAction) -> Unit,
     onBackPressed: () -> Unit
 ) {
-    val connectedToNetwork by connectionToNetworkState()
     Box(
         modifier = Modifier,
         contentAlignment = Alignment.TopStart
@@ -107,16 +105,16 @@ fun GifScreen(
                     val listener = object : ImageRequest.Listener {
                         override fun onError(request: ImageRequest, result: ErrorResult) {
                             super.onError(request, result)
-                            if (urlToLoad == gifInPage.url && !connectedToNetwork) {
+                            if (urlToLoad == gifInPage.url && !state.connectedToNetwork) {
                                 urlToLoad = gifInPage.downsizedUrl
-                            } else if (urlToLoad == gifInPage.downsizedUrl && !connectedToNetwork) {
+                            } else if (urlToLoad == gifInPage.downsizedUrl && !state.connectedToNetwork) {
                                 cantLoadGifCauseOfNetwork = true
                             }
                         }
                     }
 
-                    LaunchedEffect(connectedToNetwork, cantLoadGifCauseOfNetwork) {
-                        if (connectedToNetwork && cantLoadGifCauseOfNetwork) {
+                    LaunchedEffect(state.connectedToNetwork, cantLoadGifCauseOfNetwork) {
+                        if (state.connectedToNetwork && cantLoadGifCauseOfNetwork) {
                             urlToLoad = gifInPage.url
                             cantLoadGifCauseOfNetwork = false
                         }
