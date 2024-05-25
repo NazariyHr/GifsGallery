@@ -1,4 +1,4 @@
-package com.gifs.gallery.ui.theme
+package com.gifs.gallery.presentation.common.theme
 
 import android.app.Activity
 import android.os.Build
