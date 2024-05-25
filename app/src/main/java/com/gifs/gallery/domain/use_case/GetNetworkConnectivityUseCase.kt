@@ -1,9 +1,9 @@
 package com.gifs.gallery.domain.use_case
 
 import android.net.ConnectivityManager
+import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import com.gifs.gallery.presentation.common.NetworkCallback
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
@@ -13,7 +13,7 @@ class GetNetworkConnectivityUseCase @Inject constructor(
 ) {
 
     operator fun invoke() = callbackFlow {
-        val callback = NetworkCallback { isConnected -> trySend(isConnected) }
+        val callback = networkCallback { isConnected -> trySend(isConnected) }
 
         val networkRequest = NetworkRequest.Builder()
             .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
@@ -38,6 +38,18 @@ class GetNetworkConnectivityUseCase @Inject constructor(
             actNetwork.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
             actNetwork.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
             else -> false
+        }
+    }
+
+    private fun networkCallback(callback: (Boolean) -> Unit): ConnectivityManager.NetworkCallback {
+        return object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                callback(true)
+            }
+
+            override fun onLost(network: Network) {
+                callback(false)
+            }
         }
     }
 }

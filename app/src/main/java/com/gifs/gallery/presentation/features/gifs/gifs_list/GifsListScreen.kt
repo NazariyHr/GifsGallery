@@ -119,6 +119,7 @@ fun GifsListScreen(
                     items(state.gifs, key = { it.id }) { gif ->
                         GifItem(
                             gif = gif,
+                            connectedToNetwork = state.connectedToNetwork,
                             onRemoveGifClicked = {
                                 onAction(GifsAction.OnRemoveGifClicked(it))
                             },

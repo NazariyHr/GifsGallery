@@ -11,7 +11,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -34,7 +33,6 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.gifs.gallery.R
 import com.gifs.gallery.domain.model.Gif
-import com.gifs.gallery.presentation.common.connectionToNetworkState
 import com.gifs.gallery.presentation.common.theme.ScarletRed
 import kotlinx.coroutines.Dispatchers
 
@@ -42,11 +40,11 @@ import kotlinx.coroutines.Dispatchers
 @Composable
 fun GifItem(
     gif: Gif,
+    connectedToNetwork: Boolean,
     onRemoveGifClicked: (gifId: String) -> Unit,
     onGifClicked: (gif: Gif) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    val connectedToNetwork by connectionToNetworkState()
     val context = LocalContext.current
     Box(
         modifier = modifier
@@ -79,10 +77,8 @@ fun GifItem(
             }
         }
 
-        LaunchedEffect(connectedToNetwork, cantLoadGifCauseOfNetwork) {
-            if (connectedToNetwork && cantLoadGifCauseOfNetwork) {
-                cantLoadGifCauseOfNetwork = false
-            }
+        if (connectedToNetwork && cantLoadGifCauseOfNetwork) {
+            cantLoadGifCauseOfNetwork = false
         }
 
         if (cantLoadGifCauseOfNetwork) {
@@ -148,6 +144,7 @@ fun GifItemPreview() {
             url = "",
             downsizedUrl = ""
         ),
+        connectedToNetwork = true,
         onRemoveGifClicked = {},
         onGifClicked = {}
     )
