@@ -1,4 +1,4 @@
-package com.gifs.gallery.presentation.features.gifs_list
+package com.gifs.gallery.presentation.features.gifs.gifs_list
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
@@ -24,15 +24,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import com.gifs.gallery.domain.model.Gif
-import com.gifs.gallery.presentation.features.gifs_list.components.GifItem
-import com.gifs.gallery.presentation.features.gifs_list.components.Search
+import com.gifs.gallery.presentation.features.gifs.GifsAction
+import com.gifs.gallery.presentation.features.gifs.GifsListState
+import com.gifs.gallery.presentation.features.gifs.GifsViewModel
+import com.gifs.gallery.presentation.features.gifs.gifs_list.components.GifItem
+import com.gifs.gallery.presentation.features.gifs.gifs_list.components.Search
 import com.gifs.gallery.presentation.features.navigation.toGifScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -42,7 +44,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun GifsListScreenRoot(
     navController: NavController,
-    viewModel: GifsListViewModel = hiltViewModel(),
+    viewModel: GifsViewModel,
 ) {
     val gifs by viewModel.state.collectAsStateWithLifecycle()
     GifsListScreen(
@@ -59,7 +61,7 @@ fun GifsListScreenRoot(
 fun GifsListScreen(
     state: GifsListState,
     errorsFlow: Flow<String>,
-    onAction: (GifsListScreenAction) -> Unit,
+    onAction: (GifsAction) -> Unit,
     onGifClicked: (gif: Gif) -> Unit
 ) {
     val context = LocalContext.current
@@ -73,6 +75,7 @@ fun GifsListScreen(
             }
         }
     }
+    val count = state.gifs.count()
 
     Box(
         modifier = Modifier.fillMaxSize()
@@ -92,7 +95,7 @@ fun GifsListScreen(
         }
         if (isScrolledToTheEnd && !state.isLoading) {
             LaunchedEffect(Unit) {
-                onAction(GifsListScreenAction.OnScrolledToEnd)
+                onAction(GifsAction.OnScrolledToEnd)
             }
         }
         Column(
@@ -100,10 +103,10 @@ fun GifsListScreen(
         ) {
             Search(
                 onSearchClicked = {
-                    onAction(GifsListScreenAction.OnSearch(it))
+                    onAction(GifsAction.OnSearch(it))
                 },
                 onCloseClicked = {
-                    onAction(GifsListScreenAction.OnCloseSearchClicked)
+                    onAction(GifsAction.OnCloseSearchClicked)
                 }
             )
             LazyVerticalStaggeredGrid(
@@ -118,7 +121,7 @@ fun GifsListScreen(
                         GifItem(
                             gif = gif,
                             onRemoveGifClicked = {
-                                onAction(GifsListScreenAction.OnRemoveGifClicked(it))
+                                onAction(GifsAction.OnRemoveGifClicked(it))
                             },
                             onGifClicked = onGifClicked
                         )

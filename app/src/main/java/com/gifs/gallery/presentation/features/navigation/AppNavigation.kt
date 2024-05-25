@@ -3,14 +3,19 @@ package com.gifs.gallery.presentation.features.navigation
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.gifs.gallery.presentation.features.gif.GifScreen
-import com.gifs.gallery.presentation.features.gifs_list.GifsListScreenRoot
+import com.gifs.gallery.presentation.features.gifs.GifsViewModel
+import com.gifs.gallery.presentation.features.gifs.gif.GifScreenRoot
+import com.gifs.gallery.presentation.features.gifs.gifs_list.GifsListScreenRoot
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.reflect.typeOf
@@ -20,7 +25,7 @@ fun AppNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.GifsListScreen) {
         composable<Screen.GifsListScreen> {
-            GifsListScreenRoot(navController)
+            GifsListScreenRoot(navController, sharedViewModel<GifsViewModel>())
         }
         composable<Screen.GifScreen>(
             typeMap = mapOf(
@@ -28,7 +33,8 @@ fun AppNavigation() {
             )
         ) {
             val gif = it.toRoute<Screen.GifScreen>().toGif()
-            GifScreen(gif)
+            val vm = sharedViewModel<GifsViewModel>()
+            GifScreenRoot(navController, vm, gif)
         }
     }
 }
@@ -50,4 +56,9 @@ inline fun <reified T : Parcelable> parcelableType(
     override fun serializeAsValue(value: T): String = json.encodeToString(value)
 
     override fun put(bundle: Bundle, key: String, value: T) = bundle.putParcelable(key, value)
+}
+
+@Composable
+inline fun <reified T : ViewModel> sharedViewModel(): T {
+    return hiltViewModel(LocalContext.current as ComponentActivity)
 }

@@ -1,4 +1,4 @@
-package com.gifs.gallery.presentation.features.gifs_list.components
+package com.gifs.gallery.presentation.features.gifs.gifs_list.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -77,8 +77,7 @@ fun GifItem(
             Box(
                 modifier = Modifier.clickable {
                     onRemoveGifClicked(gif.id)
-                },
-                contentAlignment = Alignment.TopEnd
+                }
             ) {
                 Icon(
                     imageVector = Icons.Default.Close,

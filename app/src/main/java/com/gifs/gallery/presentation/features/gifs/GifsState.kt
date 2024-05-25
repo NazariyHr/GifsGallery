@@ -1,4 +1,4 @@
-package com.gifs.gallery.presentation.features.gifs_list
+package com.gifs.gallery.presentation.features.gifs
 
 import android.os.Parcelable
 import com.gifs.gallery.domain.model.Gif

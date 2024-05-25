@@ -1,4 +1,4 @@
-package com.gifs.gallery.presentation.features.gifs_list.components
+package com.gifs.gallery.presentation.features.gifs.gifs_list.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height

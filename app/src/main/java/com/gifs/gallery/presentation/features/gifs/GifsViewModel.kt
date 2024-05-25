@@ -1,4 +1,4 @@
-package com.gifs.gallery.presentation.features.gifs_list
+package com.gifs.gallery.presentation.features.gifs
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GifsListViewModel @Inject constructor(
+class GifsViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     private val getGifsUseCase: GetGifsUseCase,
     private val removeGifUseCase: RemoveGifUseCase,
@@ -62,15 +62,15 @@ class GifsListViewModel @Inject constructor(
         }
     }
 
-    fun onAction(action: GifsListScreenAction) {
+    fun onAction(action: GifsAction) {
         when (action) {
-            GifsListScreenAction.OnScrolledToEnd -> {
+            GifsAction.OnScrolledToEnd -> {
                 if (!_state.value.endOfListReached && !_state.value.isLoading) {
                     loadMore()
                 }
             }
 
-            is GifsListScreenAction.OnRemoveGifClicked -> {
+            is GifsAction.OnRemoveGifClicked -> {
                 viewModelScope.launch {
                     val newList = stateValue.gifs.filter { it.id != action.gifId }
                     stateValue = stateValue.copy(
@@ -80,7 +80,7 @@ class GifsListViewModel @Inject constructor(
                 }
             }
 
-            is GifsListScreenAction.OnSearch -> {
+            is GifsAction.OnSearch -> {
                 stateValue = stateValue.copy(
                     isLoading = true,
                     gifs = emptyList(),
@@ -106,7 +106,7 @@ class GifsListViewModel @Inject constructor(
                 }
             }
 
-            GifsListScreenAction.OnCloseSearchClicked -> {
+            GifsAction.OnCloseSearchClicked -> {
                 stateValue = stateValue.copy(
                     isLoading = true,
                     gifs = emptyList(),
